@@ -582,8 +582,13 @@ button:active{
 }
 
 #adCloseBtn{
-    display:none;
+    display:inline-block;
     margin-top:20px
+}
+
+#adCloseBtn:disabled{
+    opacity:0.5;
+    cursor:not-allowed;
 }
 
 
@@ -1318,31 +1323,40 @@ function endGame(){
 
 
 function showAdPopup(){
-
-    const popup=
-        document.getElementById("adPopup");
-
-    const closeBtn=
-        document.getElementById("adCloseBtn");
+    const popup = document.getElementById("adPopup");
+    const closeBtn = document.getElementById("adCloseBtn");
 
     popup.style.display="flex";
 
-    closeBtn.style.display="none";
+    // 닫기 버튼은 처음부터 보이지만 비활성화
+    closeBtn.style.display="inline-block";
+    closeBtn.disabled=true;
 
-    setTimeout(()=>{
+    let count=3;
+    closeBtn.textContent=`닫기 (${count})`;
 
-        closeBtn.style.display="inline-block";
+    const countdown=setInterval(()=>{
+        count--;
 
-    },5000);
+        if(count>0){
+            closeBtn.textContent=`닫기 (${count})`;
+        }else{
+            clearInterval(countdown);
+
+            // 3, 2, 1 종료 후 버튼 활성화
+            closeBtn.disabled=false;
+            closeBtn.textContent="닫기";
+        }
+    },1000);
 
     closeBtn.onclick=()=>{
+        if(closeBtn.disabled) return;
 
         popup.style.display="none";
-
         startGame();
-
     };
 }
+
 
 </script>
 
